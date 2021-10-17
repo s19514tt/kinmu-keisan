@@ -1,0 +1,5 @@
+{"start":"10/17/2021, 05:05 PM","finish":"10/17/2021, 05:07 PM","kyukei":1,"_id":"AtBSUuJv5Ibci7ku"}
+{"start":"10/17/2021, 05:05 PM","finish":"10/17/2021, 05:08 PM","kyukei":1,"_id":"JT6DH1Md9ep3MXZB"}
+{"start":"10/17/2021, 05:05 PM","finish":"10/17/2021, 05:08 PM","kyukei":1,"_id":"JwdQ6h5EAGeQl4WB"}
+{"start":"10/18/2021, 05:05 PM","finish":"10/18/2021, 05:07 PM","kyukei":1,"_id":"hnz4Q6xCDbJzoKZI"}
+{"start":"10/17/2021, 05:08 PM","finish":"10/17/2021, 05:52 PM","kyukei":0,"_id":"3RkG9EWgUczOXFmy"}
