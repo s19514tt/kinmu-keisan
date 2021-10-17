@@ -1,19 +1,27 @@
 # kinmu-manager
 
-## Project setup
-```
-yarn install
+## how to 動かし方
+
+### クライアント
+
+http://192.168.1.30:3232/　をそれぞれのアドレスへ変更
+
+```bash
+
+npm i
+
+npm run build
+
+#dist を各自サーバーへ
+
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+### サーバー
 
-### Compiles and minifies for production
-```
-yarn build
-```
+```bash
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+cd server&&npm i
+
+node ./index.js
+
+```
