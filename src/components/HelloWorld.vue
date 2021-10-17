@@ -62,7 +62,7 @@ export default Vue.extend({
       start: string;
       finish: string;
       kyukei: number;
-    }[]>('http://localhost:3000/')
+    }[]>('http://192.168.1.30:3232/')
     this.data = data.data
   },
   methods: {
@@ -78,7 +78,7 @@ export default Vue.extend({
       this.beforeStart = !(localStorage.getItem('start'))
     },
     finishWorking: async function () {
-      await axios.post('http://localhost:3000/', {
+      await axios.post('http://192.168.1.30:3232/', {
         start: localStorage.getItem('start'),
         finish: this.finishDate,
         kyukei: this.kyukei
@@ -87,10 +87,19 @@ export default Vue.extend({
       this.startDateSet = localStorage.getItem('start')
       this.beforeStart = !(localStorage.getItem('start'))
     },
-    calChingin: function () {
-      console.log(this.data);
-      const d = this.data.filter((item) => new Date(item.start).getTime() >= new Date(this.bDate).getTime() && new Date(item.start).getTime() <= new Date(this.aDate).getTime() + 86400000).map((item) => (new Date(item.finish).getTime() - new Date(item.start).getTime()) / 60000 - item.kyukei).reduce((a, b) => a + b)
-      this.chingin = `勤務時間 ${d}分(${Math.floor(d / 60)}時間${d % 60}分) 給料 ${d * 33.3333333333333333}円`
+    calChingin: async function () {
+      const data = await axios.get<{
+        start: string;
+        finish: string;
+        kyukei: number;
+      }[]>('http://192.168.1.30:3232/')
+      this.data = data.data
+      if (this.data.filter((item) => new Date(item.start).getTime() >= new Date(this.bDate).getTime() && new Date(item.start).getTime() <= new Date(this.aDate).getTime() + 86400000).length !== 0) {
+        const d = this.data.filter((item) => new Date(item.start).getTime() >= new Date(this.bDate).getTime() && new Date(item.start).getTime() <= new Date(this.aDate).getTime() + 86400000).map((item) => (new Date(item.finish).getTime() - new Date(item.start).getTime()) / 60000 - item.kyukei).reduce((a, b) => a + b)
+        this.chingin = `勤務時間 ${d}分(${Math.floor(d / 60)}時間${d % 60}分) 給料 ${d * 33.3333333333333333}円`
+      } else {
+        this.chingin = '対象期間のデータなし'
+      }
     },
     cancel: function () {
       localStorage.removeItem('start')

@@ -36,6 +36,6 @@ router.post('/',async (req: express.Request, res: express.Response) => {
 });
 app.use(router);
 
-app.listen(3000, () => {
+app.listen(3232, () => {
   console.log('App listening on port 3000!');
 });
