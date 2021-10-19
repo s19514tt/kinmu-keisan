@@ -48,8 +48,8 @@ export default Vue.extend({
     finishDate: new Date().toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
     beforeStart: (!localStorage.getItem('start')),
     kyukei: 0,
-    bDate: new Date().toISOString().substr(0, 10),
-    aDate: new Date().toISOString().substr(0, 10),
+    bDate: '',
+    aDate: '',
     data: [] as {
       start: string;
       finish: string;
@@ -58,19 +58,15 @@ export default Vue.extend({
     chingin: '未計算'
   }),
   mounted: async function () {
-    const data = await axios.get<{
-      start: string;
-      finish: string;
-      kyukei: number;
-    }[]>('http://192.168.1.30:3232/')
-    this.data = data.data
+    this.aDate = this.formatDate(new Date())
+    this.bDate = this.formatDate(new Date())
   },
   methods: {
     reloadBefore: function () {
       this.startDate = new Date().toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     },
     reloadFinish: function () {
-      this.startDate = new Date().toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      this.finishDate = new Date().toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     },
     startWorking: function () {
       localStorage.setItem('start', this.startDate)
@@ -94,8 +90,9 @@ export default Vue.extend({
         kyukei: number;
       }[]>('http://192.168.1.30:3232/')
       this.data = data.data
-      if (this.data.filter((item) => new Date(item.start).getTime() >= new Date(this.bDate).getTime() && new Date(item.start).getTime() <= new Date(this.aDate).getTime() + 86400000).length !== 0) {
-        const d = this.data.filter((item) => new Date(item.start).getTime() >= new Date(this.bDate).getTime() && new Date(item.start).getTime() <= new Date(this.aDate).getTime() + 86400000).map((item) => (new Date(item.finish).getTime() - new Date(item.start).getTime()) / 60000 - item.kyukei).reduce((a, b) => a + b)
+      const filteredWorkData = this.data.filter((item) => new Date(item.start).getTime() >= new Date(this.bDate).getTime() - 32400000 && new Date(item.start).getTime() <= new Date(this.aDate).getTime() + 86400000 - 32400000)
+      if (filteredWorkData.length !== 0) {
+        const d = filteredWorkData.map((item) => (new Date(item.finish).getTime() - new Date(item.start).getTime()) / 60000 - item.kyukei).reduce((a, b) => a + b)
         this.chingin = `勤務時間 ${d}分(${Math.floor(d / 60)}時間${d % 60}分) 給料 ${d * 33.3333333333333333}円`
       } else {
         this.chingin = '対象期間のデータなし'
@@ -105,6 +102,12 @@ export default Vue.extend({
       localStorage.removeItem('start')
       this.startDateSet = localStorage.getItem('start')
       this.beforeStart = !(localStorage.getItem('start'))
+    },
+    formatDate: function (date: Date) {
+      var y = date.getFullYear();
+      var m = ('00' + (date.getMonth() + 1)).slice(-2);
+      var d = ('00' + date.getDate()).slice(-2);
+      return (y + '-' + m + '-' + d);
     }
   }
 });
