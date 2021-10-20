@@ -76,11 +76,15 @@ export default Vue.extend({
     reloadFinish: function () {
       this.finishDate = new Date().toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     },
+    reloadFinishWithKyukei: function () {
+      this.finishDate = new Date().toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      this.kyukei = 0
+    },
     startWorking: function () {
       localStorage.setItem('start', this.startDate)
       this.startDateSet = localStorage.getItem('start')
       this.beforeStart = !(localStorage.getItem('start'))
-      this.reloadFinish()
+      this.reloadFinishWithKyukei()
     },
     finishWorking: async function () {
       try {
@@ -118,6 +122,7 @@ export default Vue.extend({
         localStorage.removeItem('start')
         this.startDateSet = localStorage.getItem('start')
         this.beforeStart = !(localStorage.getItem('start'))
+        this.reloadBefore()
       }
     },
     formatDate: function (date: Date) {
